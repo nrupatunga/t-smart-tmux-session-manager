@@ -77,7 +77,8 @@ PROMPT=$(get_fzf_prompt)
 
 get_fzf_find_binding() {
 	local fzf_find_binding
-	local fzf_find_binding_default='ctrl-f:change-prompt(find> )+reload(find ~ -maxdepth 3 -type d)'
+	local fzf_find_binding_default='ctrl-f:change-prompt(find> )+reload(find ~ -maxdepth 8 -type d )'
+	local fzf_find_binding_default='ctrl-e:change-prompt(find> )+reload(find /media/nthere/work -maxdepth 3 -type d )'
 	if [ "$TMUX_RUNNING" -eq 0 ]; then
 		fzf_find_binding="$(tmux show -gqv '@t-fzf-find-binding')"
 	fi
@@ -113,7 +114,8 @@ get_fzf_results() {
 	fi
 }
 
-fzf_border_label_default=' t - smart tmux session manager '
+#fzf_border_label_default='tmux session manager'
+fzf_border_label_default=''
 BORDER_LABEL=${T_FZF_BORDER_LABEL:-$fzf_border_label_default}
 
 HEADER=" ^s sessions ^x zoxide ^f find"
@@ -140,11 +142,11 @@ else # argument not provided
 	case $T_RUNTYPE in
 	attached)
 		if [[ ! -v $FZF_TMUX_OPTS ]]; then
-			FZF_TMUX_OPTS="-p 53%,58%"
+			FZF_TMUX_OPTS="-p 45%,45%"
 		fi
 
 		RESULT=$(
-			(get_fzf_results) | fzf-tmux \
+			(get_fzf_results) | fzf-tmux --reverse --color=bg+:-1 \
 				--bind "$FIND_BIND" \
 				--bind "$SESSION_BIND" \
 				--bind "$TAB_BIND" \
@@ -158,7 +160,7 @@ else # argument not provided
 		;;
 	detached)
 		RESULT=$(
-			(get_fzf_results) | fzf \
+			(get_fzf_results) | fzf --reverse --color=bg+:-1 \
 				--bind "$FIND_BIND" \
 				--bind "$SESSION_BIND" \
 				--bind "$TAB_BIND" \
@@ -172,7 +174,7 @@ else # argument not provided
 		;;
 	serverless)
 		RESULT=$(
-			(get_fzf_results) | fzf \
+			(get_fzf_results) | fzf --reverse --color=bg+:-1 \
 				--bind "$FIND_BIND" \
 				--bind "$TAB_BIND" \
 				--bind "$ZOXIDE_BIND" \
